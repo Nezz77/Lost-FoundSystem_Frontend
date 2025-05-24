@@ -2,7 +2,8 @@ import Table from 'react-bootstrap/Table';
 import Button from 'react-bootstrap/Button';
 import { GetItems } from '../service/Items/GetItems';
 import { useEffect, useState } from 'react';
-import EditItem, { Status } from './EditItem';
+import EditItem from './EditItem';
+import { DeleteItems } from '../service/Items/DeleteItems';
 
 export function ItemConsole() {
 
@@ -13,7 +14,7 @@ export function ItemConsole() {
         description: string;
         date: string;       // You may convert this to Date if you're storing real date objects
         time: string;       // Consider using a time format or Date object if needed
-        status: Status; // strict type for status values
+        status: string; // strict type for status values
     }
 
     const [itemData, setItemData] = useState<Item[]>([]);
@@ -47,10 +48,18 @@ export function ItemConsole() {
     const handleClose=()=>SetShowEditItemForm(false)
     
     const handleUpdate = (updateItem : Item)=>{
-        alert("Update Item")
         console.log("Updated Item",updateItem)
     }
-    //to get data
+    //to delete data
+    const handleDelete = async(id:string)=>{
+        try{
+            await DeleteItems(id)
+        setItemData(itemData.filter((item)=>item.id !==id))
+        }catch(err){
+            console.error("Delete item failed with",err)
+        }
+        
+    }
     return (
         <>
             <Table striped bordered hover>
@@ -70,7 +79,7 @@ export function ItemConsole() {
                             <td>
                                 <div className="d-flex gap-2">
                                 <Button variant="outline-success" onClick={() =>handleEdit(row)}>Edit</Button>
-                                <Button variant="outline-danger">Delete</Button>
+                                <Button variant="outline-danger" onClick={() =>handleDelete(row.id)}>Delete</Button>
 
                                 </div>
                             </td>

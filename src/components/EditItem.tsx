@@ -1,11 +1,7 @@
 import { useEffect, useState } from 'react';
 import { Button, Modal, Form, FloatingLabel } from 'react-bootstrap';
+import { UpdateItems } from '../service/Items/UpdateItems';
 
-export enum Status {
-  LOST = 'LOST',
-  FOUND = 'FOUND',
-  CLAIMED = 'CLAIMED',
-}
 
 interface Item {
   id: string;
@@ -13,7 +9,7 @@ interface Item {
   description: string;
   date: string;       // You may convert this to Date if you're storing real date objects
   time: string;       // Consider using a time format or Date object if needed
-  status: Status; // strict type for status values
+  status: string; // strict type for status values
 }
 
 interface ItemEditProps {
@@ -32,21 +28,28 @@ function EditItem({ show, selectedRow, handleClose, handleUpdate }: ItemEditProp
     description: "",
     date: "",
     time: "",
-    status: Status.LOST,
+    status: "",
   });
-  useEffect(()=>{
-    if(selectedRow){
-      setItem({...selectedRow})
+  useEffect(() => {
+    if (selectedRow) {
+      setItem({ ...selectedRow })
     }
-  },[selectedRow])
+  }, [selectedRow])
 
   //add itemdata from form
-  const handleOnChange=(e:React.ChangeEvent<HTMLInputElement>)=>{
-    setItem({...item,[e.target.name]:e.target.value})
+  const handleOnChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setItem({ ...item, [e.target.name]: e.target.value })
   }
   //handle update data 
-  const handleSave=()=>{
-    alert("Updted")
+  const handleSave = async () => {
+    try {
+      const updatedItem = await UpdateItems(item);
+      handleUpdate(updatedItem)
+      handleClose()
+      alert("Updted")
+    }catch(err) {
+      console.error("Failed to update the item",err)
+    }
   }
   return (
     <Modal show={show} onHide={handleClose}>
@@ -76,7 +79,7 @@ function EditItem({ show, selectedRow, handleClose, handleUpdate }: ItemEditProp
             className="mb-3"
           >
             <Form.Control
-            
+
               type="text"
               name="name"
               value={item.name}
@@ -90,7 +93,7 @@ function EditItem({ show, selectedRow, handleClose, handleUpdate }: ItemEditProp
             className="mb-3"
           >
             <Form.Control
-            
+
               type="text"
               name="description"
               value={item.description}
@@ -105,7 +108,7 @@ function EditItem({ show, selectedRow, handleClose, handleUpdate }: ItemEditProp
             className="mb-3"
           >
             <Form.Control
-            
+
               type="text"
               name="date"
               value={item.date}
@@ -120,7 +123,7 @@ function EditItem({ show, selectedRow, handleClose, handleUpdate }: ItemEditProp
             className="mb-3"
           >
             <Form.Control
-            
+
               type="text"
               name="time"
               value={item.time}
@@ -135,7 +138,7 @@ function EditItem({ show, selectedRow, handleClose, handleUpdate }: ItemEditProp
             className="mb-3"
           >
             <Form.Control
-            
+
               type="text"
               name="status"
               value={item.status}
