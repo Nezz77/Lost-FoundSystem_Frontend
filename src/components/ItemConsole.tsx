@@ -4,6 +4,7 @@ import { GetItems } from '../service/Items/GetItems';
 import { useEffect, useState } from 'react';
 import EditItem from './EditItem';
 import { DeleteItems } from '../service/Items/DeleteItems';
+import AddItem from './AddItem';
 
 export function ItemConsole() {
 
@@ -18,8 +19,10 @@ export function ItemConsole() {
     }
 
     const [itemData, setItemData] = useState<Item[]>([]);
-    const [selectedRow,SetSelectedRow] =useState<Item|null>(null)
-    const [showEditItemForm,SetShowEditItemForm] = useState(false) //handle the show edit item form
+    const [selectedRow,setSelectedRow] =useState<Item|null>(null)
+    const [showEditItemForm,setShowEditItemForm] = useState(false) //handle the show edit item form
+        const [showAddItemForm,setShowAddItemForm] = useState(false) 
+
 
     useEffect(() => {
         const loadData = async () => {
@@ -42,10 +45,10 @@ export function ItemConsole() {
     //handle edit function
     const handleEdit =(row :Item)=>{
         console.log("handle Edit",row)
-        SetSelectedRow(row)
-        SetShowEditItemForm(true)
+        setSelectedRow(row)
+        setShowEditItemForm(true)
     }
-    const handleClose=()=>SetShowEditItemForm(false)
+    const handleClose=()=>setShowEditItemForm(false)
     
     const handleUpdate = (updateItem : Item)=>{
         console.log("Updated Item",updateItem)
@@ -60,8 +63,16 @@ export function ItemConsole() {
         }
         
     }
+    const handleAdd=(newItem:Item)=>{
+        setItemData((prevData)=>[...prevData,newItem])
+    }
     return (
         <>
+        <div className="d-flex justify-content-end p-3">
+              <Button variant="outline-primary" onClick={()=>setShowAddItemForm(true)} >Add Item</Button>
+
+        </div>
+
             <Table striped bordered hover>
                 <thead>
                     <tr>
@@ -94,6 +105,11 @@ export function ItemConsole() {
             handleClose={handleClose}
             handleUpdate={handleUpdate}
 
+            />
+            <AddItem
+            show={showAddItemForm}
+            handleClose={()=>setShowAddItemForm(false)}
+            handleAdd={handleAdd}
             />
         </>
     )
