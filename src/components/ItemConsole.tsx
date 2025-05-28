@@ -115,5 +115,3 @@ export function ItemConsole() {
     )
 }
 
-// 02/15
-// 9.58
