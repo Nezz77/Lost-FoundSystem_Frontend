@@ -1,11 +1,9 @@
 import Table from 'react-bootstrap/Table';
 import Button from 'react-bootstrap/Button';
-import { GetItems } from '../service/Items/GetItems';
 import { useEffect, useState } from 'react';
 import EditItem from './EditItem';
-import { DeleteItems } from '../service/Items/DeleteItems';
 import AddItem from './AddItem';
-
+import { AddItemData, UpdateItems, GetItems, DeleteItems } from '../../service/Items/ItemData';
 export function ItemConsole() {
 
     //to load data making interface
@@ -19,9 +17,9 @@ export function ItemConsole() {
     }
 
     const [itemData, setItemData] = useState<Item[]>([]);
-    const [selectedRow,setSelectedRow] =useState<Item|null>(null)
-    const [showEditItemForm,setShowEditItemForm] = useState(false) //handle the show edit item form
-        const [showAddItemForm,setShowAddItemForm] = useState(false) 
+    const [selectedRow, setSelectedRow] = useState<Item | null>(null)
+    const [showEditItemForm, setShowEditItemForm] = useState(false) //handle the show edit item form
+    const [showAddItemForm, setShowAddItemForm] = useState(false)
 
 
     useEffect(() => {
@@ -43,40 +41,46 @@ export function ItemConsole() {
         "Action"
     ];
     //handle edit function
-    const handleEdit =(row :Item)=>{
-        console.log("handle Edit",row)
+    const handleEdit = (row: Item) => {
+        console.log("handle Edit", row)
         setSelectedRow(row)
         setShowEditItemForm(true)
     }
-    const handleClose=()=>setShowEditItemForm(false)
-    
-    const handleUpdate = (updateItem : Item)=>{
-        console.log("Updated Item",updateItem)
+    const handleClose = () => setShowEditItemForm(false)
+
+    const handleUpdate = (updateItem: Item) => {
+        console.log("Updated Item", updateItem)
     }
     //to delete data
-    const handleDelete = async(id:string)=>{
-        try{
+    const handleDelete = async (id: string) => {
+        try {
             await DeleteItems(id)
-        setItemData(itemData.filter((item)=>item.id !==id))
-        }catch(err){
-            console.error("Delete item failed with",err)
+            setItemData(itemData.filter((item) => item.id !== id))
+        } catch (err) {
+            console.error("Delete item failed with", err)
         }
-        
+
     }
-    const handleAdd=(newItem:Item)=>{
-        setItemData((prevData)=>[...prevData,newItem])
-    }
+    const handleAdd = async (newItem: Item) => {
+        try {
+            await AddItemData(newItem); // Save item to backend
+            const updatedList = await GetItems(); // Re-fetch updated list from backend
+            setItemData(updatedList); // Update the table data
+        } catch (error) {
+            console.error("Failed to add item", error);
+        }
+    };
     return (
         <>
-        <div className="d-flex justify-content-end p-3">
-              <Button variant="outline-primary" onClick={()=>setShowAddItemForm(true)} >Add Item</Button>
+            <div className="d-flex justify-content-end p-3">
+                <Button variant="outline-primary" onClick={() => setShowAddItemForm(true)} >Add Item</Button>
 
-        </div>
+            </div>
 
             <Table striped bordered hover>
                 <thead>
                     <tr>
-                        {tHeads.map((headings,index) => (
+                        {tHeads.map((headings, index) => (
                             <th key={index}>{headings}</th>
                         ))}
                     </tr>
@@ -89,8 +93,8 @@ export function ItemConsole() {
                             ))}
                             <td>
                                 <div className="d-flex gap-2">
-                                <Button variant="outline-success" onClick={() =>handleEdit(row)}>Edit</Button>
-                                <Button variant="outline-danger" onClick={() =>handleDelete(row.id)}>Delete</Button>
+                                    <Button variant="outline-success" onClick={() => handleEdit(row)}>Edit</Button>
+                                    <Button variant="outline-danger" onClick={() => handleDelete(row.id)}>Delete</Button>
 
                                 </div>
                             </td>
@@ -99,17 +103,19 @@ export function ItemConsole() {
 
                 </tbody>
             </Table>
-            <EditItem 
-            show = {showEditItemForm}
-            selectedRow ={selectedRow}
-            handleClose={handleClose}
-            handleUpdate={handleUpdate}
+            <EditItem
+                show={showEditItemForm}
+                selectedRow={selectedRow}
+                handleClose={handleClose}
+                handleUpdate={handleUpdate}
+                updateItems={UpdateItems}
 
             />
             <AddItem
-            show={showAddItemForm}
-            handleClose={()=>setShowAddItemForm(false)}
-            handleAdd={handleAdd}
+                show={showAddItemForm}
+                handleClose={() => setShowAddItemForm(false)}
+                handleAdd={handleAdd}
+                addItem={AddItemData}
             />
         </>
     )

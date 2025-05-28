@@ -1,8 +1,5 @@
 import { useEffect, useState } from 'react';
 import { Button, Modal, Form, FloatingLabel } from 'react-bootstrap';
-import { UpdateItems } from '../service/Items/UpdateItems';
-import { Prev } from 'react-bootstrap/esm/PageItem';
-import { AddItemData } from '../service/Items/AddItemData';
 
 
 interface Item {
@@ -14,17 +11,18 @@ interface Item {
   status: string; // strict type for status values
 }
 
-// interface ItemEditProps {
-//   show: boolean;
-//   selectedRow: Item | null;
-//   handleClose: () => void;
-//   handleUpdate: (updateItem: Item) => void;
-// }
+interface ItemEditProps {
+  show: boolean;
+  selectedRow: Item | null;
+  handleClose: () => void;
+  handleUpdate: (updateItem: Item) => void;
+  updateItems:(item: Item) => Promise<Item>; 
+}
 
 
-function AddItem({ show, handleClose, handleAdd,}: any) {
+function EditItem({ show, selectedRow, handleClose, handleUpdate,updateItems  }: ItemEditProps) {
   //state management
-  const [newItem, setNewItem] = useState<Item>({
+  const [item, setItem] = useState<Item>({
     id: "",
     name: "",
     description: "",
@@ -32,18 +30,21 @@ function AddItem({ show, handleClose, handleAdd,}: any) {
     time: "",
     status: "",
   });
-
+  useEffect(() => {
+    if (selectedRow) {
+      setItem({ ...selectedRow })
+    }
+  }, [selectedRow])
 
   //add itemdata from form
   const handleOnChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const {name,value} = e.target;
-    setNewItem((prev)=>({...prev,[name]:value}))
+    setItem({ ...item, [e.target.name]: e.target.value })
   }
-  //handle add item data 
-  const handleOnSubmit = async () => {
+  //handle update data 
+  const handleSave = async () => {
     try {
-      const newItemDetails = await AddItemData(newItem);
-      handleAdd(newItemDetails)
+      const updatedItem = await updateItems(item);
+      handleUpdate(item )
       handleClose()
       alert("Updted")
     }catch(err) {
@@ -59,6 +60,21 @@ function AddItem({ show, handleClose, handleAdd,}: any) {
         <form>
           <FloatingLabel
             controlId="floatingInput"
+            label="Item Id"
+            className="mb-3"
+          >
+            <Form.Control
+              readOnly
+              type="text"
+              name="id"
+              value={item.id}
+              onChange={handleOnChange}
+            />
+          </FloatingLabel>
+
+
+          <FloatingLabel
+            controlId="floatingInput"
             label="Item Name"
             className="mb-3"
           >
@@ -66,7 +82,7 @@ function AddItem({ show, handleClose, handleAdd,}: any) {
 
               type="text"
               name="name"
-              value={newItem.name}
+              value={item.name}
               onChange={handleOnChange}
             />
           </FloatingLabel>
@@ -80,7 +96,7 @@ function AddItem({ show, handleClose, handleAdd,}: any) {
 
               type="text"
               name="description"
-              value={newItem.description}
+              value={item.description}
               onChange={handleOnChange}
             />
           </FloatingLabel>
@@ -95,7 +111,7 @@ function AddItem({ show, handleClose, handleAdd,}: any) {
 
               type="text"
               name="date"
-              value={newItem.date}
+              value={item.date}
               onChange={handleOnChange}
             />
           </FloatingLabel>
@@ -110,7 +126,7 @@ function AddItem({ show, handleClose, handleAdd,}: any) {
 
               type="text"
               name="time"
-              value={newItem.time}
+              value={item.time}
               onChange={handleOnChange}
             />
           </FloatingLabel>
@@ -125,7 +141,7 @@ function AddItem({ show, handleClose, handleAdd,}: any) {
 
               type="text"
               name="status"
-              value={newItem.status}
+              value={item.status}
               onChange={handleOnChange}
             />
           </FloatingLabel>
@@ -137,12 +153,12 @@ function AddItem({ show, handleClose, handleAdd,}: any) {
         <Button variant="secondary" onClick={handleClose}>
           Close
         </Button>
-        <Button variant="primary" onClick={handleOnSubmit}>
-          Save 
+        <Button variant="primary" onClick={handleSave}>
+          Save Changes
         </Button>
       </Modal.Footer>
     </Modal>
   );
 }
 
-export default AddItem;
+export default EditItem;
