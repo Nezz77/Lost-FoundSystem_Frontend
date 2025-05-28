@@ -3,7 +3,7 @@ import Button from 'react-bootstrap/Button';
 import { useEffect, useState } from 'react';
 import EditItem from './EditItem';
 import AddItem from './AddItem';
-import { AddItemData, UpdateItems, GetItems, DeleteItems } from '../../service/Items/ItemData';
+import { AddItemData, UpdateItems, GetItems, DeleteItems } from '../../service/ItemData';
 export function ItemConsole() {
 
     //to load data making interface
