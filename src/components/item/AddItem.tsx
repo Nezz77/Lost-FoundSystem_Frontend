@@ -47,6 +47,20 @@ function AddItem({ show, handleClose, handleAdd,addItem}: any) {
       console.error("Failed to update the item",err)
     }
   }
+  const renderFloatingTable= (label:string,name:keyof Item,type="text",readOnly=false) => (
+    <FloatingLabel
+      controlId="floatingInput" 
+      label={label}
+      className="mb-3"
+    >
+      <Form.Control
+        type={type}
+        name={name}
+        value={newItem[name]}
+        onChange={handleOnChange}
+      />
+    </FloatingLabel>
+  );
   return (
     <Modal show={show} onHide={handleClose}>
       <Modal.Header closeButton>
@@ -54,80 +68,12 @@ function AddItem({ show, handleClose, handleAdd,addItem}: any) {
       </Modal.Header>
       <Modal.Body>
         <form>
-          <FloatingLabel
-            controlId="floatingInput"
-            label="Item Name"
-            className="mb-3"
-          >
-            <Form.Control
-
-              type="text"
-              name="name"
-              value={newItem.name}
-              onChange={handleOnChange}
-            />
-          </FloatingLabel>
-
-          <FloatingLabel
-            controlId="floatingInput"
-            label="Item Description"
-            className="mb-3"
-          >
-            <Form.Control
-
-              type="text"
-              name="description"
-              value={newItem.description}
-              onChange={handleOnChange}
-            />
-          </FloatingLabel>
-
-
-          <FloatingLabel
-            controlId="floatingInput"
-            label=" Date"
-            className="mb-3"
-          >
-            <Form.Control
-
-              type="text"
-              name="date"
-              value={newItem.date}
-              onChange={handleOnChange}
-            />
-          </FloatingLabel>
-
-
-          <FloatingLabel
-            controlId="floatingInput"
-            label="Time"
-            className="mb-3"
-          >
-            <Form.Control
-
-              type="text"
-              name="time"
-              value={newItem.time}
-              onChange={handleOnChange}
-            />
-          </FloatingLabel>
-
-
-          <FloatingLabel
-            controlId="floatingInput"
-            label="Item status"
-            className="mb-3"
-          >
-            <Form.Control
-
-              type="text"
-              name="status"
-              value={newItem.status}
-              onChange={handleOnChange}
-            />
-          </FloatingLabel>
-
-
+          {renderFloatingTable("Item Id", "id", "text", true)}
+          {renderFloatingTable("Item Name", "name")}
+          {renderFloatingTable("Item Description", "description")}
+          {renderFloatingTable("Date", "date")}
+          {renderFloatingTable("Time", "time")}
+          {renderFloatingTable("Item status", "status")}
         </form>
       </Modal.Body>
       <Modal.Footer>
