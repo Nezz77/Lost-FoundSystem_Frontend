@@ -48,8 +48,13 @@ export function ItemConsole() {
     }
     const handleClose = () => setShowEditItemForm(false)
 
-    const handleUpdate = (updateItem: Item) => {
-        console.log("Updated Item", updateItem)
+    const handleUpdate = async(updateItem: Item) => {
+        try {
+            const updatedList = await GetItems(); // Re-fetch latest user list
+            setItemData(updatedList);            // Update the table
+        } catch (error) {
+            console.error("Failed to refresh user list after update", error);
+        }
     }
     //to delete data
     const handleDelete = async (id: string) => {
@@ -61,15 +66,18 @@ export function ItemConsole() {
         }
 
     }
-    const handleAdd = async (newItem: Item) => {
-        try {
-            await AddItemData(newItem); // Save item to backend
-            const updatedList = await GetItems(); // Re-fetch updated list from backend
-            setItemData(updatedList); // Update the table data
-        } catch (error) {
-            console.error("Failed to add item", error);
-        }
-    };
+    const handleAdd = (savedItem: Item) => {
+    setItemData(prev => [...prev, savedItem]); // ✅ Just update table with the item returned by backend
+};
+// const handleAdd = async (newItem: Item) => {
+//         try {
+//             await AddItemData(newItem); // Save item to backend
+//             const updatedList = await GetItems(); // Re-fetch updated list from backend
+//             setItemData(updatedList); // Update the table data
+//         } catch (error) {
+//             console.error("Failed to add item", error);
+//         }
+//     };
     return (
         <>
             <div className="d-flex justify-content-end p-3">

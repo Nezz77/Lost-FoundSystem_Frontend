@@ -63,13 +63,13 @@ export function UserConsole() {
 
     }
     const handleAdd = async (newUser: User) => {
-  try {
-    const savedUser = await AddUserData(newUser); // Save to backend
-    setUserData(prev => [...prev, savedUser]);    // ✅ Update table immediately
-  } catch (error) {
-    console.error("Failed to add user", error);
-  }
-};
+        try {
+            const savedUser = await AddUserData(newUser); // Save to backend
+            setUserData(prev => [...prev, savedUser]);    // ✅ Update table immediately
+        } catch (error) {
+            console.error("Failed to add user", error);
+        }
+    };
     return (
         <>
             <div className="d-flex justify-content-end p-3">

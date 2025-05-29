@@ -48,8 +48,13 @@ export function RequestConsole() {
     }
     const handleClose = () => setShowEditRequestForm(false)
 
-    const handleUpdate = (updateRequest: Request) => {
-        console.log("Updated Request", updateRequest)
+    const handleUpdate = async (updateRequest: Request) => {
+        try {
+            const updatedList = await GetRequests(); // Re-fetch latest user list
+            setRequestData(updatedList);            // Update the table
+        } catch (error) {
+            console.error("Failed to refresh user list after update", error);
+        }
     }
     //to delete data
     const handleDelete = async (requestId: string) => {

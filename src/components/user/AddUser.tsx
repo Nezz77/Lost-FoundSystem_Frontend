@@ -26,6 +26,7 @@ function AddUser({ show, handleClose, handleAdd, addUser }: any) {
     password: "",
     role: "",
   });
+  
 
 
   //add Userdata from form
@@ -48,7 +49,7 @@ function AddUser({ show, handleClose, handleAdd, addUser }: any) {
       console.error("Failed to update the User", err)
     }
   }
-  
+
   const renderFloatingTable = (label: string, name: keyof User, type = "text", readOnly = false) => (
     <FloatingLabel
       controlId="floatingInput"
