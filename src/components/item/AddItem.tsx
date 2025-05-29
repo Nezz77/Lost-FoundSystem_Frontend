@@ -68,12 +68,14 @@ function AddItem({ show, handleClose, handleAdd,addItem}: any) {
       </Modal.Header>
       <Modal.Body>
         <form>
-          {renderFloatingTable("Item Id", "id", "text", true)}
+          {/* {renderFloatingTable("Item Id", "id", "text", true)} */}
           {renderFloatingTable("Item Name", "name")}
           {renderFloatingTable("Item Description", "description")}
           {renderFloatingTable("Date", "date")}
           {renderFloatingTable("Time", "time")}
           {renderFloatingTable("Item status", "status")}
+          
+
         </form>
       </Modal.Body>
       <Modal.Footer>

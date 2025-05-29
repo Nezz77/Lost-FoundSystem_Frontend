@@ -1,0 +1,62 @@
+import axios from "axios"
+import { error } from "console";
+
+const baseURL = "http://localhost:8085/lostfound/api/v1/users"
+
+const AddUserData = async (user: any) => {
+    //save a User
+    console.log("save user.......", user)
+    try {
+        const response = await axios.post(
+            baseURL, user
+        );
+        console.log(response.data)
+        return response.data;
+
+    } catch (error) {
+        console.error("Failed to update the data", error)
+        throw error
+    }
+}
+
+const DeleteUsers = async (id: string) => {
+
+    try {
+        const response = await axios.delete(
+            `${baseURL}?userId=${id}`
+        );
+        console.log(response.data)
+        return response.data;
+
+    } catch (error) {
+        console.error("Failed to delete the data", error)
+        throw error
+    }
+}
+const GetUsers = async () => {
+
+    try {
+        const response = await axios.get(`${baseURL}/getallusers`);
+        console.log(response.data)
+        return response.data;
+    } catch (error) {
+        console.error("Failed to get the data", error)
+        throw error
+    }
+}
+const UpdateUsers = async (user: any) => {
+
+    try {
+        const response = await axios.patch(
+            `${baseURL}?userId=${user.id}`,
+            user
+        );
+        console.log(response.data)
+        return response.data;
+
+    } catch (error) {
+        console.error("Failed to update the data", error)
+        throw error
+    }
+}
+export { AddUserData, DeleteUsers, GetUsers, UpdateUsers }
