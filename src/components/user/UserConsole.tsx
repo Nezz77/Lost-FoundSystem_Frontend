@@ -4,6 +4,7 @@ import { useEffect, useState } from 'react';
 import EditUser from './EditUser';
 import AddUser from './AddUser';
 import { AddUserData, UpdateUsers, GetUsers, DeleteUsers } from '../../service/UserData';
+import { useLocation } from 'react-router';
 export function UserConsole() {
 
     //to load data making interface
@@ -62,21 +63,23 @@ export function UserConsole() {
         }
 
     }
-    const handleAdd = async (newUser: User) => {
+    const handleAdd = async (savedUser: User) => {
         try {
-            const savedUser = await AddUserData(newUser); // Save to backend
-            setUserData(prev => [...prev, savedUser]);    // ✅ Update table immediately
+            setUserData(prev => [...prev, savedUser]); // ✅ Just update table with the item returned by backend
         } catch (error) {
             console.error("Failed to add user", error);
         }
     };
+    const location = useLocation();
+    const routename = location.pathname.split("/").filter(Boolean).pop() || "HOME";
+    const formattedTitle = routename.charAt(0).toUpperCase() + routename.slice(1).replace(/-/g, ' '); // Format the title
     return (
         <>
             <div className="d-flex justify-content-end p-3">
                 <Button variant="outline-primary" onClick={() => setShowAddUserForm(true)} >Add User</Button>
 
             </div>
-
+            <h1 className="text-center">{formattedTitle}</h1>
             <Table striped bordered hover>
                 <thead>
                     <tr>

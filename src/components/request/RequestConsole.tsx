@@ -4,6 +4,7 @@ import { useEffect, useState } from 'react';
 import EditRequest from './EditRequest';
 import AddRequest from './AddRequest';
 import { AddRequestData, UpdateRequests, GetRequests, DeleteRequests } from '../../service/RequestData';
+import { useLocation } from 'react-router';
 export function RequestConsole() {
 
     //to load data making interface
@@ -75,13 +76,16 @@ export function RequestConsole() {
             console.error("Failed to add request", error);
         }
     };
+    const location = useLocation();
+    const routename = location.pathname.split("/").filter(Boolean).pop() || "HOME";
+    const formattedTitle = routename.charAt(0).toUpperCase() + routename.slice(1).replace(/-/g, ' '); // Format the title
     return (
         <>
             <div className="d-flex justify-content-end p-3">
                 <Button variant="outline-primary" onClick={() => setShowAddRequestForm(true)} >Add Request</Button>
 
             </div>
-
+            <h1 className="text-center">{formattedTitle}</h1>
             <Table striped bordered hover>
                 <thead>
                     <tr>

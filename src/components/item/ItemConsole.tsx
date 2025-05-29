@@ -1,9 +1,10 @@
 import Table from 'react-bootstrap/Table';
 import Button from 'react-bootstrap/Button';
-import { useEffect, useState } from 'react';
+import { use, useEffect, useState } from 'react';
 import EditItem from './EditItem';
 import AddItem from './AddItem';
 import { AddItemData, UpdateItems, GetItems, DeleteItems } from '../../service/ItemData';
+import { useLocation } from 'react-router-dom';
 export function ItemConsole() {
 
     //to load data making interface
@@ -69,6 +70,10 @@ export function ItemConsole() {
     const handleAdd = (savedItem: Item) => {
     setItemData(prev => [...prev, savedItem]); // ✅ Just update table with the item returned by backend
 };
+// get location of current route
+const location = useLocation();
+const routename=location.pathname.split("/").filter(Boolean).pop()||"HOME"; 
+const formattedTitle=routename.charAt(0).toUpperCase() + routename.slice(1).replace(/-/g, ' '); // Format the title
 // const handleAdd = async (newItem: Item) => {
 //         try {
 //             await AddItemData(newItem); // Save item to backend
@@ -84,6 +89,7 @@ export function ItemConsole() {
                 <Button variant="outline-primary" onClick={() => setShowAddItemForm(true)} >Add Item</Button>
 
             </div>
+            <h1 className="text-center">{formattedTitle}</h1>
 
             <Table striped bordered hover>
                 <thead>

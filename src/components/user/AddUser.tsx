@@ -73,7 +73,7 @@ function AddUser({ show, handleClose, handleAdd, addUser }: any) {
         <form>
           {/* {renderFloatingTable("User Id", "id", "text", true)} */}
           {renderFloatingTable("User Name", "username")}
-          {renderFloatingTable("User Description", "password")}
+          {renderFloatingTable("User Password", "password")}
           {renderFloatingTable("Role", "role")}
         </form>
       </Modal.Body>
