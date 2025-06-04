@@ -1,5 +1,4 @@
 import axios from "axios"
-import { error } from "console";
 
 const baseURL = "http://localhost:8085/lostfound/api/v1/users"
 
@@ -28,11 +27,11 @@ const AddUserData = async (user: any) => {
     }
 }
 
-const DeleteUsers = async (id: string) => {
+const DeleteUsers = async (userid: string) => {
 
     try {
         const response = await axios.delete(
-            `${baseURL}?userId=${id}`,
+            `${baseURL}?userId=${userid}`,
             {
                 headers: {
                     Authorization: fetchToken()
@@ -69,7 +68,7 @@ const UpdateUsers = async (user: any) => {
 
     try {
         const response = await axios.patch(
-            `${baseURL}?userId=${user.id}`,
+            `${baseURL}?userId=${user.userid}`,
             user,
             {
                 headers: {

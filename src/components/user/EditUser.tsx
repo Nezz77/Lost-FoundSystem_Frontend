@@ -3,7 +3,7 @@ import { Button, Modal, Form, FloatingLabel } from 'react-bootstrap';
 
 
 interface User {
-  Userid: string;
+  userid: string;
   firstName: string;
   lastName: string;
   email: string;       // Assuming this is the username/email
@@ -23,7 +23,7 @@ interface UserEditProps {
 function EditUser({ show, selectedRow, handleClose, handleUpdate, updateUsers }: UserEditProps) {
   //state management
   const [user, setUser] = useState<User>({
-    Userid: "",
+    userid: "",
     firstName: "",
     lastName: "",
     email: "",
@@ -60,7 +60,7 @@ function EditUser({ show, selectedRow, handleClose, handleUpdate, updateUsers }:
       <Form.Control
         type={type}
         name={name}
-        value={user[name]?? ""}
+        value={user[name] ?? ""}
         onChange={handleOnChange}
         readOnly={readOnly}
       />
@@ -73,10 +73,10 @@ function EditUser({ show, selectedRow, handleClose, handleUpdate, updateUsers }:
       </Modal.Header>
       <Modal.Body>
         <form>
-          {renderFloatingTable("User Id", "Userid", "text", true)}
-          {renderFloatingTable("UserName/Email", "email", "email", true)}
+          {renderFloatingTable("User Id", "userid", "text", true)}
           {renderFloatingTable("First Name", "firstName")}
           {renderFloatingTable("Last Name", "lastName")}
+          {renderFloatingTable("UserName/Email", "email", "email", true)}
           {renderFloatingTable("User password", "password")}
           {renderFloatingTable("Role", "role")}
         </form>

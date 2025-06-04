@@ -9,7 +9,7 @@ export function UserConsole() {
 
     //to load data making interface
     interface User {
-        Userid: string;
+        userid: string;
         firstName: string;
         lastName: string;
         email: string;       // Assuming this is the username/email
@@ -58,10 +58,10 @@ export function UserConsole() {
         }
     };
     //to delete data
-    const handleDelete = async (Userid: string) => {
+    const handleDelete = async (userid: string) => {
         try {
-            await DeleteUsers(Userid)
-            setUserData(userData.filter((user) => user.Userid !== Userid))
+            await DeleteUsers(userid)
+            setUserData(userData.filter((user) => user.userid !== userid))
         } catch (err) {
             console.error("Delete User failed with", err)
         }
@@ -95,14 +95,14 @@ export function UserConsole() {
                 </thead>
                 <tbody>
                     {userData.map((row) => (
-                        <tr key={row.Userid}>
+                        <tr key={row.userid}>
                             {Object.values(row).map((cell, index) => (
                                 <td key={index}>{cell}</td>
                             ))}
                             <td>
                                 <div className="d-flex gap-2">
                                     <Button variant="outline-success" onClick={() => handleEdit(row)}>Edit</Button>
-                                    <Button variant="outline-danger" onClick={() => handleDelete(row.Userid)}>Delete</Button>
+                                    <Button variant="outline-danger" onClick={() => handleDelete(row.userid)}>Delete</Button>
 
                                 </div>
                             </td>

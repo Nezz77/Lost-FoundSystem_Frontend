@@ -27,11 +27,11 @@ const AddRequestData = async (request: any) => {
     }
 }
 
-const DeleteRequests = async (id: string) => {
+const DeleteRequests = async (requestId: string) => {
 
     try {
         const response = await axios.delete(
-            `${baseURL}?requestId=${id}`,
+            `${baseURL}?requestId=${requestId}`,
             {
             headers: {
                 Authorization: fetchToken()
@@ -67,7 +67,7 @@ const UpdateRequests = async (request: any) => {
 
     try {
         const response = await axios.patch(
-            `${baseURL}?requestId=${request.id}`,
+            `${baseURL}?requestId=${request.requestId}`,
             request,
              {
                 headers: {

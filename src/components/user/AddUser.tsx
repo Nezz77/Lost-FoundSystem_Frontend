@@ -3,7 +3,7 @@ import { Button, Modal, Form, FloatingLabel } from 'react-bootstrap';
 
 
 interface User {
-        Userid: string;
+        userid: string;
         firstName: string;
         lastName: string;
         email: string;       // Assuming this is the username/email
@@ -22,7 +22,7 @@ interface User {
 function AddUser({ show, handleClose, handleAdd, addUser }: any) {
   //state management
   const [newUser, setNewUser] = useState<User>({
-    Userid: "",
+    userid: "",
     firstName: "",
     lastName: "", 
     email: "", 
