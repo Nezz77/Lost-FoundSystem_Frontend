@@ -6,9 +6,10 @@ interface Request {
   requestId: string;
   userId: string;
   itemId: string;
+  requestStatus: string;
   requesteddate: string;       // You may convert this to Date if you're storing real date objects
-  requestedtime: string;       // Consider using a time format or Date object if needed
-  status: string; // strict type for status values
+  requestedtime: 'PENDING'|'APPROVED'|'REJECTED'|"";       // Consider using a time format or Date object if needed
+   // strict type for status values
 }
 
 // interface RequestEditProps {
@@ -25,9 +26,10 @@ function AddRequest({ show, handleClose, handleAdd,addRequest}: any) {
     requestId: "",
     userId: "",
     itemId: "",
+    requestStatus: "",
     requesteddate: "",
     requestedtime: "",
-    status: "",
+    
   });
 
 
@@ -64,16 +66,17 @@ function AddRequest({ show, handleClose, handleAdd,addRequest}: any) {
   return (
     <Modal show={show} onHide={handleClose}>
       <Modal.Header closeButton>
-        <Modal.Title>Edit Request</Modal.Title>
+        <Modal.Title>Add Request</Modal.Title>
       </Modal.Header>
       <Modal.Body>
         <form>
           {/* {renderFloatingTable("Request Id", "requestId", "text", true)} */}
+          {/* {renderFloatingTable("Request Id", "requestId")} */}
           {renderFloatingTable("User Id", "userId")}
-          {renderFloatingTable("Request Item Id", "itemId")}
-          {renderFloatingTable("Requested Date", "requesteddate")}
-          {renderFloatingTable("Requested Time", "requestedtime")}
-          {renderFloatingTable("Request status", "status")}
+          {renderFloatingTable("Item Id", "itemId")}
+          {renderFloatingTable("Request status", "requestStatus")}
+          {/* {renderFloatingTable("Requested Date", "requesteddate")}
+          {renderFloatingTable("Requested Time", "requestedtime")} */}
         </form>
       </Modal.Body>
       <Modal.Footer>

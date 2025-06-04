@@ -3,10 +3,12 @@ import { Button, Modal, Form, FloatingLabel } from 'react-bootstrap';
 
 
 interface User {
-  id: string;
-  username: string;
+  Userid: string;
+  firstName: string;
+  lastName: string;
+  email: string;       // Assuming this is the username/email
   password: string;
-  role: string;       // You may convert this to Date if you're storing real date objects
+  role: 'ADMIN' | 'STAFF' | 'USER' | "";
 }
 
 interface UserEditProps {
@@ -14,15 +16,17 @@ interface UserEditProps {
   selectedRow: User | null;
   handleClose: () => void;
   handleUpdate: (updatedItem: User) => void;
-  updateUsers:(user: User) => Promise<User>; 
+  updateUsers: (user: User) => Promise<User>;
 }
 
 
-function EditUser({ show, selectedRow, handleClose, handleUpdate,updateUsers  }: UserEditProps) {
+function EditUser({ show, selectedRow, handleClose, handleUpdate, updateUsers }: UserEditProps) {
   //state management
   const [user, setUser] = useState<User>({
-    id: "",
-    username: "",
+    Userid: "",
+    firstName: "",
+    lastName: "",
+    email: "",
     password: "",
     role: "",
   });
@@ -40,27 +44,27 @@ function EditUser({ show, selectedRow, handleClose, handleUpdate,updateUsers  }:
   const handleSave = async () => {
     try {
       const updatedUser = await updateUsers(user);
-      handleUpdate(updatedUser )
+      handleUpdate(user)
       handleClose()
       alert("Updted")
-    }catch(err) {
-      console.error("Failed to update the User",err)
+    } catch (err) {
+      console.error("Failed to update the User", err)
     }
   }
-  const renderFloatingTable= (label:string,name:keyof User,type="text",readOnly=false) => (
+  const renderFloatingTable = (label: string, name: keyof User, type = "text", readOnly = false) => (
     <FloatingLabel
-            controlId="floatingInput"
-            label={label}
-            className="mb-3"
-          >
-            <Form.Control
-              type={type}
-              name={name}
-              value={user[name]}
-              onChange={handleOnChange}
-              readOnly={readOnly}
-            />
-          </FloatingLabel>
+      controlId="floatingInput"
+      label={label}
+      className="mb-3"
+    >
+      <Form.Control
+        type={type}
+        name={name}
+        value={user[name]?? ""}
+        onChange={handleOnChange}
+        readOnly={readOnly}
+      />
+    </FloatingLabel>
   );
   return (
     <Modal show={show} onHide={handleClose}>
@@ -69,10 +73,12 @@ function EditUser({ show, selectedRow, handleClose, handleUpdate,updateUsers  }:
       </Modal.Header>
       <Modal.Body>
         <form>
-          {renderFloatingTable ("User Id", "id", "text", true)}
-          {renderFloatingTable ("User Name/Email", "username")}
-          {renderFloatingTable ("User password", "password")}
-          {renderFloatingTable ("Role", "role")}  
+          {renderFloatingTable("User Id", "Userid", "text", true)}
+          {renderFloatingTable("UserName/Email", "email", "email", true)}
+          {renderFloatingTable("First Name", "firstName")}
+          {renderFloatingTable("Last Name", "lastName")}
+          {renderFloatingTable("User password", "password")}
+          {renderFloatingTable("Role", "role")}
         </form>
       </Modal.Body>
       <Modal.Footer>

@@ -14,7 +14,7 @@ export function RequestConsole() {
         itemId: string;
         requesteddate: string;       // You may convert this to Date if you're storing real date objects
         requestedtime: string;       // Consider using a time format or Date object if needed
-        status: string; // strict type for status values
+        requestStatus: string; // strict type for status values
     }
 
     const [requestData, setRequestData] = useState<Request[]>([]);
@@ -38,7 +38,7 @@ export function RequestConsole() {
         "Item Id",
         "Requested Date",
         "requestedtime",
-        "Status",
+        "requestStatus",
         "Action"
     ];
     //handle edit function

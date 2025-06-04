@@ -8,7 +8,7 @@ interface Item {
   description: string;
   date: string;       // You may convert this to Date if you're storing real date objects
   time: string;       // Consider using a time format or Date object if needed
-  status: string; // strict type for status values
+  itemStatus: 'LOST'|'FOUND'|'CLAIMED'|""; // strict type for status values
 }
 
 // interface ItemEditProps {
@@ -27,7 +27,7 @@ function AddItem({ show, handleClose, handleAdd,addItem}: any) {
     description: "",
     date: "",
     time: "",
-    status: "",
+    itemStatus: "",
   });
 
 
@@ -64,7 +64,7 @@ function AddItem({ show, handleClose, handleAdd,addItem}: any) {
   return (
     <Modal show={show} onHide={handleClose}>
       <Modal.Header closeButton>
-        <Modal.Title>Edit Item</Modal.Title>
+        <Modal.Title>Add Item</Modal.Title>
       </Modal.Header>
       <Modal.Body>
         <form>
@@ -73,9 +73,8 @@ function AddItem({ show, handleClose, handleAdd,addItem}: any) {
           {renderFloatingTable("Item Description", "description")}
           {renderFloatingTable("Date", "date")}
           {renderFloatingTable("Time", "time")}
-          {renderFloatingTable("Item status", "status")}
+          {renderFloatingTable("Item status", "itemStatus")}
           
-
         </form>
       </Modal.Body>
       <Modal.Footer>

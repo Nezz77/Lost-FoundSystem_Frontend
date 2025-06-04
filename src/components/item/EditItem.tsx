@@ -8,7 +8,7 @@ interface Item {
   description: string;
   date: string;       // You may convert this to Date if you're storing real date objects
   time: string;       // Consider using a time format or Date object if needed
-  status: string; // strict type for status values
+  itemStatus: 'LOST'|'FOUND'|'CLAIMED'|""; // strict type for status values
 }
 
 interface ItemEditProps {
@@ -28,7 +28,7 @@ function EditItem({ show, selectedRow, handleClose, handleUpdate,updateItems  }:
     description: "",
     date: "",
     time: "",
-    status: "",
+    itemStatus: "",
   });
   useEffect(() => {
     if (selectedRow) {
@@ -44,7 +44,7 @@ function EditItem({ show, selectedRow, handleClose, handleUpdate,updateItems  }:
   const handleSave = async () => {
     try {
       const updatedItem = await updateItems(item);
-      handleUpdate(item )
+      handleUpdate(item)
       handleClose()
       alert("Updted")
     }catch(err) {
@@ -60,7 +60,7 @@ function EditItem({ show, selectedRow, handleClose, handleUpdate,updateItems  }:
             <Form.Control
               type={type}
               name={name}
-              value={item[name]}
+              value={item[name]?? ""}
               onChange={handleOnChange}
               readOnly={readOnly}
             />
@@ -78,7 +78,7 @@ function EditItem({ show, selectedRow, handleClose, handleUpdate,updateItems  }:
           {renderFloatingTable ("Item Description", "description")}
           {renderFloatingTable ("Date", "date")}
           {renderFloatingTable ("Time", "time")}
-          {renderFloatingTable ("Item status", "status")}
+          {renderFloatingTable ("Item status", "itemStatus")}
           
         </form>
       </Modal.Body>

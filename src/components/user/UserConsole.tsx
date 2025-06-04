@@ -9,10 +9,12 @@ export function UserConsole() {
 
     //to load data making interface
     interface User {
-        id: string;
-        username: string;
+        Userid: string;
+        firstName: string;
+        lastName: string;
+        email: string;       // Assuming this is the username/email
         password: string;
-        role: string;       // You may convert this to Date if you're storing real date objects
+        role: 'ADMIN'| 'STAFF'| 'USER' |"";      // You may convert this to Date if you're storing real date objects
     }
 
     const [userData, setUserData] = useState<User[]>([]);
@@ -32,7 +34,9 @@ export function UserConsole() {
 
     const tHeads: String[] = [
         "User Id",
-        "User Name",
+        "First Name",
+        "Last Name",
+        "Email",
         "User password",
         "Role",
         "Action"
@@ -54,10 +58,10 @@ export function UserConsole() {
         }
     };
     //to delete data
-    const handleDelete = async (id: string) => {
+    const handleDelete = async (Userid: string) => {
         try {
-            await DeleteUsers(id)
-            setUserData(userData.filter((user) => user.id !== id))
+            await DeleteUsers(Userid)
+            setUserData(userData.filter((user) => user.Userid !== Userid))
         } catch (err) {
             console.error("Delete User failed with", err)
         }
@@ -66,6 +70,7 @@ export function UserConsole() {
     const handleAdd = async (savedUser: User) => {
         try {
             setUserData(prev => [...prev, savedUser]); // ✅ Just update table with the item returned by backend
+            console.log("User added successfully", savedUser);
         } catch (error) {
             console.error("Failed to add user", error);
         }
@@ -90,14 +95,14 @@ export function UserConsole() {
                 </thead>
                 <tbody>
                     {userData.map((row) => (
-                        <tr key={row.id}>
+                        <tr key={row.Userid}>
                             {Object.values(row).map((cell, index) => (
                                 <td key={index}>{cell}</td>
                             ))}
                             <td>
                                 <div className="d-flex gap-2">
                                     <Button variant="outline-success" onClick={() => handleEdit(row)}>Edit</Button>
-                                    <Button variant="outline-danger" onClick={() => handleDelete(row.id)}>Delete</Button>
+                                    <Button variant="outline-danger" onClick={() => handleDelete(row.Userid)}>Delete</Button>
 
                                 </div>
                             </td>

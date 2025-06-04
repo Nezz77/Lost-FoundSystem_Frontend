@@ -3,12 +3,21 @@ import { error } from "console";
 
 const baseURL = "http://localhost:8085/lostfound/api/v1/users"
 
+const fetchToken = () => {
+    const token = localStorage.getItem("lostfound");
+    return "Bearer " + token;
+}
 const AddUserData = async (user: any) => {
     //save a User
     console.log("save user.......", user)
     try {
         const response = await axios.post(
             baseURL, user
+            , {
+                headers: {
+                    Authorization: fetchToken()
+                }
+            }
         );
         console.log(response.data)
         return response.data;
@@ -23,7 +32,12 @@ const DeleteUsers = async (id: string) => {
 
     try {
         const response = await axios.delete(
-            `${baseURL}?userId=${id}`
+            `${baseURL}?userId=${id}`,
+            {
+                headers: {
+                    Authorization: fetchToken()
+                }
+            }
         );
         console.log(response.data)
         return response.data;
@@ -36,7 +50,14 @@ const DeleteUsers = async (id: string) => {
 const GetUsers = async () => {
 
     try {
-        const response = await axios.get(`${baseURL}/getallusers`);
+        const response = await axios.get(`${baseURL}/getallusers`
+            ,
+            {
+                headers: {
+                    Authorization: fetchToken()
+                }
+            }
+        );
         console.log(response.data)
         return response.data;
     } catch (error) {
@@ -49,7 +70,12 @@ const UpdateUsers = async (user: any) => {
     try {
         const response = await axios.patch(
             `${baseURL}?userId=${user.id}`,
-            user
+            user,
+            {
+                headers: {
+                    Authorization: fetchToken()
+                }
+            }
         );
         console.log(response.data)
         return response.data;

@@ -1,14 +1,20 @@
 import axios from "axios"
-import { error } from "console";
-
 const baseURL = "http://localhost:8085/lostfound/api/v1/items"
 
+const fetchToken = () => {
+    const token = localStorage.getItem("lostfound");
+    return "Bearer " + token;
+}
 const AddItemData = async (item: any) => {
     //save a item
     console.log("save item.......", item)
     try {
         const response = await axios.post(
-            baseURL, item
+            baseURL, item, {
+            headers: {
+                Authorization: fetchToken()
+            }
+        }
         );
         console.log(response.data)
         return response.data;
@@ -23,7 +29,12 @@ const DeleteItems = async (id: string) => {
 
     try {
         const response = await axios.delete(
-            `${baseURL}?itemId=${id}`
+            `${baseURL}?itemId=${id}`,
+            {
+                headers: {
+                    Authorization: fetchToken()
+                }
+            }
         );
         console.log(response.data)
         return response.data;
@@ -36,7 +47,13 @@ const DeleteItems = async (id: string) => {
 const GetItems = async () => {
 
     try {
-        const response = await axios.get(`${baseURL}/getallitems`);
+        const response = await axios.get(`${baseURL}/getallitems`,
+            {
+                headers: {
+                    Authorization: fetchToken()
+                }
+            }
+        );
         console.log(response.data)
         return response.data;
     } catch (error) {
@@ -49,7 +66,12 @@ const UpdateItems = async (item: any) => {
     try {
         const response = await axios.patch(
             `${baseURL}?itemId=${item.id}`,
-            item
+            item,
+            {
+                headers: {
+                    Authorization: fetchToken()
+                }
+            }
         );
         console.log(response.data)
         return response.data;

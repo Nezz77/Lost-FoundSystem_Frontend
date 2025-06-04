@@ -3,12 +3,13 @@ import { Button, Modal, Form, FloatingLabel } from 'react-bootstrap';
 
 
 interface User {
-  id: string;
-  username: string;
-  password: string;
-  role: string;
-
-}
+        Userid: string;
+        firstName: string;
+        lastName: string;
+        email: string;       // Assuming this is the username/email
+        password: string;
+        role: 'ADMIN'| 'STAFF'| 'USER' |"";
+    }
 
 // interface User EditProps {
 //   show: boolean;
@@ -21,8 +22,10 @@ interface User {
 function AddUser({ show, handleClose, handleAdd, addUser }: any) {
   //state management
   const [newUser, setNewUser] = useState<User>({
-    id: "",
-    username: "",
+    Userid: "",
+    firstName: "",
+    lastName: "", 
+    email: "", 
     password: "",
     role: "",
   });
@@ -36,7 +39,7 @@ function AddUser({ show, handleClose, handleAdd, addUser }: any) {
   }
   //handle add User data 
   const handleOnSubmit = async () => {
-    if (!newUser.username || !newUser.password || !newUser.role) {
+    if (!newUser.email || !newUser.password || !newUser.role) {
       alert("Please fill in all required fields.");
       return;
     }
@@ -67,12 +70,14 @@ function AddUser({ show, handleClose, handleAdd, addUser }: any) {
   return (
     <Modal show={show} onHide={handleClose}>
       <Modal.Header closeButton>
-        <Modal.Title>Edit User</Modal.Title>
+        <Modal.Title>Add User</Modal.Title>
       </Modal.Header>
       <Modal.Body>
         <form>
           {/* {renderFloatingTable("User Id", "id", "text", true)} */}
-          {renderFloatingTable("User Name", "username")}
+          {renderFloatingTable("First Name", "firstName")}
+          {renderFloatingTable("Last Name", "lastName")}
+          {renderFloatingTable("Email","email")}
           {renderFloatingTable("User Password", "password")}
           {renderFloatingTable("Role", "role")}
         </form>

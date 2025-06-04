@@ -14,7 +14,7 @@ export function ItemConsole() {
         description: string;
         date: string;       // You may convert this to Date if you're storing real date objects
         time: string;       // Consider using a time format or Date object if needed
-        status: string; // strict type for status values
+        itemStatus: 'LOST'|'FOUND'|'CLAIMED'|""; // strict type for status values
     }
 
     const [itemData, setItemData] = useState<Item[]>([]);

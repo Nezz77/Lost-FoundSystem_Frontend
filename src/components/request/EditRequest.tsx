@@ -8,7 +8,7 @@ interface Request {
   itemId: string;
   requesteddate: string;       // You may convert this to Date if you're storing real date objects
   requestedtime: string;       // Consider using a time format or Date object if needed
-  status: string; // strict type for status values
+  requestStatus: string; // strict type for status values
 }
 
 interface RequestEditProps {
@@ -28,7 +28,7 @@ function EditRequest({ show, selectedRow, handleClose, handleUpdate,updateReques
     itemId: "",
     requesteddate: "",
     requestedtime: "",
-    status: "",
+    requestStatus: "",
   });
   useEffect(() => {
     if (selectedRow) {
@@ -44,7 +44,7 @@ function EditRequest({ show, selectedRow, handleClose, handleUpdate,updateReques
   const handleSave = async () => {
     try {
       const updatedRequest = await updateRequests(request);
-      handleUpdate(request )
+      handleUpdate(request)
       handleClose()
       alert("Updted")
     }catch(err) {
@@ -74,11 +74,11 @@ function EditRequest({ show, selectedRow, handleClose, handleUpdate,updateReques
       <Modal.Body>
         <form>
           {renderFloatingTable ("Request Id", "requestId", "text", true)}
-          {renderFloatingTable ("User Id", "userId")}
-          {renderFloatingTable ("Item Id", "itemId")}
-          {renderFloatingTable ("Requested Date", "requesteddate")}
-          {renderFloatingTable ("Requested Time", "requestedtime")}
-          {renderFloatingTable ("Request status", "status")}
+          {renderFloatingTable ("User Id", "userId", "text", true)}
+          {renderFloatingTable ("Item Id", "itemId", "text", true)}
+          {renderFloatingTable ("Requested Date", "requesteddate", "text", true)}
+          {renderFloatingTable ("Requested Time", "requestedtime", "text", true)}
+          {renderFloatingTable ("Request status", "requestStatus")}
           
         </form>
       </Modal.Body>
