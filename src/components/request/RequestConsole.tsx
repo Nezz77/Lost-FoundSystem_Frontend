@@ -5,6 +5,10 @@ import EditRequest from './EditRequest';
 import AddRequest from './AddRequest';
 import { AddRequestData, UpdateRequests, GetRequests, DeleteRequests } from '../../service/RequestData';
 import { useLocation } from 'react-router';
+import Swal from 'sweetalert2'
+import { Card } from 'react-bootstrap';
+import bgImage from '../../img/request.png';
+
 export function RequestConsole() {
 
     //to load data making interface
@@ -62,6 +66,11 @@ export function RequestConsole() {
         try {
             await DeleteRequests(requestId)
             setRequestData(requestData.filter((request) => request.requestId !== requestId))
+            Swal.fire({
+                title: "Successfully Deleted!",
+                icon: "success",
+                draggable: true
+            });
         } catch (err) {
             console.error("Delete request failed with", err)
         }
@@ -72,6 +81,11 @@ export function RequestConsole() {
             await AddRequestData(newRequest); // Save item to backend
             const updatedList = await GetRequests(); // Re-fetch updated list from backend
             setRequestData(updatedList); // Update the table data
+            Swal.fire({
+                title: "Successfully Added!",
+                icon: "success",
+                draggable: true
+            });
         } catch (error) {
             console.error("Failed to add request", error);
         }
@@ -80,12 +94,32 @@ export function RequestConsole() {
     const routename = location.pathname.split("/").filter(Boolean).pop() || "HOME";
     const formattedTitle = routename.charAt(0).toUpperCase() + routename.slice(1).replace(/-/g, ' '); // Format the title
     return (
-        <>
-            <div className="d-flex justify-content-end p-3">
-                <Button variant="outline-primary" onClick={() => setShowAddRequestForm(true)} >Add Request</Button>
+            <div
+            className="min-vh-100 d-flex flex-column align-items-start"
+            style={{
+                backgroundImage: `url(${bgImage})`,
+                backgroundSize: "cover",
+                backgroundRepeat: "no-repeat",
+                backgroundPosition: "center",
+                backdropFilter: "blur(2px)",
+                position: "relative",
+                padding: "2rem",
+            }}
+        >
+            <Card className="mb-4 bg-dark text-white shadow-sm w-100" style={{ fontFamily: 'Poppins, sans-serif' }}>
+                {/* Heading centered */}
+                <Card.Body className="d-flex justify-content-center">
+                    <h1 className="m-0">{formattedTitle}</h1>
+                </Card.Body>
 
-            </div>
-            <h1 className="text-center">{formattedTitle}</h1>
+                {/* Button aligned right */}
+                <Card.Body className="d-flex justify-content-end">
+                    <Button variant="outline-light" onClick={() => setShowAddRequestForm(true)}>
+                        Add Request
+                    </Button>
+                </Card.Body>
+            </Card>
+            
             <Table striped bordered hover>
                 <thead>
                     <tr>
@@ -126,7 +160,8 @@ export function RequestConsole() {
                 handleAdd={handleAdd}
                 addRequest={AddRequestData}
             />
-        </>
-    )
+       
+    </div>
+    );
 }
 

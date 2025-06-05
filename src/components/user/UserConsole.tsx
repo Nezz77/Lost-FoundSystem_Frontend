@@ -5,6 +5,9 @@ import EditUser from './EditUser';
 import AddUser from './AddUser';
 import { AddUserData, UpdateUsers, GetUsers, DeleteUsers } from '../../service/UserData';
 import { useLocation } from 'react-router';
+import Swal from 'sweetalert2';
+import { Card } from 'react-bootstrap';
+import bgImage from '../../img/user.png';
 export function UserConsole() {
 
     //to load data making interface
@@ -52,7 +55,8 @@ export function UserConsole() {
     const handleUpdate = async (updatedUser: User) => {
         try {
             const updatedList = await GetUsers(); // Re-fetch latest user list
-            setUserData(updatedList);            // Update the table
+            setUserData(updatedList);
+                     // Update the table
         } catch (error) {
             console.error("Failed to refresh user list after update", error);
         }
@@ -62,6 +66,11 @@ export function UserConsole() {
         try {
             await DeleteUsers(userid)
             setUserData(userData.filter((user) => user.userid !== userid))
+            Swal.fire({
+                            title: "Successfully Deleted!",
+                            icon: "success",
+                            draggable: true
+                        });
         } catch (err) {
             console.error("Delete User failed with", err)
         }
@@ -79,12 +88,32 @@ export function UserConsole() {
     const routename = location.pathname.split("/").filter(Boolean).pop() || "HOME";
     const formattedTitle = routename.charAt(0).toUpperCase() + routename.slice(1).replace(/-/g, ' '); // Format the title
     return (
-        <>
-            <div className="d-flex justify-content-end p-3">
-                <Button variant="outline-primary" onClick={() => setShowAddUserForm(true)} >Add User</Button>
+        
+            <div
+            className="min-vh-100 d-flex flex-column align-items-start"
+            style={{
+                backgroundImage: `url(${bgImage})`,
+                backgroundSize: "cover",
+                backgroundRepeat: "no-repeat",
+                backgroundPosition: "center",
+                backdropFilter: "blur(2px)",
+                position: "relative",
+                padding: "2rem",
+            }}
+        >
+            <Card className="mb-4 bg-dark text-white shadow-sm w-100" style={{ fontFamily: 'Poppins, sans-serif' }}>
+                {/* Heading centered */}
+                <Card.Body className="d-flex justify-content-center">
+                    <h1 className="m-0">{formattedTitle}</h1>
+                </Card.Body>
 
-            </div>
-            <h1 className="text-center">{formattedTitle}</h1>
+                {/* Button aligned right */}
+                <Card.Body className="d-flex justify-content-end">
+                    <Button variant="outline-light" onClick={() => setShowAddUserForm(true)}>
+                        Add User
+                    </Button>
+                </Card.Body>
+            </Card>
             <Table striped bordered hover>
                 <thead>
                     <tr>
@@ -125,7 +154,7 @@ export function UserConsole() {
                 handleAdd={handleAdd}
                 addUser={AddUserData}
             />
-        </>
-    )
+        </div>
+    );
 }
 

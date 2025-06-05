@@ -2,12 +2,17 @@ import { useState } from 'react';
 import Button from 'react-bootstrap/Button';
 import Form from 'react-bootstrap/Form';
 import { SignInReq } from '../../service/Auth';
+import { Navigate, useLocation, useNavigate } from 'react-router-dom';
+import { useAuth } from './AuthProvider';
 
 export const SignIn = () => {
     interface SignIn {
         email: string;
         password: string;
     }
+
+    const { login } = useAuth(); // Get the login function from AuthProvider
+    const navigate = useNavigate();
 
     const [user, setUser] = useState<SignIn>({
         email: '',
@@ -21,17 +26,23 @@ export const SignIn = () => {
 
     const handleOnSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
+
         const token = await SignInReq(user);
         console.log("Token", token);
         console.log("User Data", user);
+        login(token)
         setUser({
             email: "",
             password: ""
-        });
-    };
+        })
+        navigate("/user")
+    }
+    const location = useLocation();
+    const routename = location.pathname.split("/").filter(Boolean).pop() || "HOME";
+    const formattedTitle = routename.charAt(0).toUpperCase() + routename.slice(1).replace(/-/g, ' ');
     return (
         <>
-            <h1>Sign In</h1>
+            <h1 className="text-center">{formattedTitle}</h1>
             <Form className='d-flex flex-column align-items-center' onSubmit={handleOnSubmit}>
                 <div className='w-50 mx-auto mt-5'>
                     <Form.Group className="mb-3" controlId="formBasicEmail">

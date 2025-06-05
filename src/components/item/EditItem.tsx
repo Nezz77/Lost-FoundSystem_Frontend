@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react';
 import { Button, Modal, Form, FloatingLabel } from 'react-bootstrap';
+import Swal from 'sweetalert2';
 
 
 interface Item {
@@ -8,7 +9,7 @@ interface Item {
   description: string;
   date: string;       // You may convert this to Date if you're storing real date objects
   time: string;       // Consider using a time format or Date object if needed
-  itemStatus: 'LOST'|'FOUND'|'CLAIMED'|""; // strict type for status values
+  itemStatus: 'LOST' | 'FOUND' | 'CLAIMED' | ""; // strict type for status values
 }
 
 interface ItemEditProps {
@@ -16,11 +17,11 @@ interface ItemEditProps {
   selectedRow: Item | null;
   handleClose: () => void;
   handleUpdate: (updatedItem: Item) => void;
-  updateItems:(item: Item) => Promise<Item>; 
+  updateItems: (item: Item) => Promise<Item>;
 }
 
 
-function EditItem({ show, selectedRow, handleClose, handleUpdate,updateItems  }: ItemEditProps) {
+function EditItem({ show, selectedRow, handleClose, handleUpdate, updateItems }: ItemEditProps) {
   //state management
   const [item, setItem] = useState<Item>({
     id: "",
@@ -37,7 +38,7 @@ function EditItem({ show, selectedRow, handleClose, handleUpdate,updateItems  }:
   }, [selectedRow])
 
   //add itemdata from form
-  const handleOnChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const handleOnChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement>) => {
     setItem({ ...item, [e.target.name]: e.target.value })
   }
   //handle update data 
@@ -46,25 +47,29 @@ function EditItem({ show, selectedRow, handleClose, handleUpdate,updateItems  }:
       const updatedItem = await updateItems(item);
       handleUpdate(item)
       handleClose()
-      alert("Updted")
-    }catch(err) {
-      console.error("Failed to update the item",err)
+      Swal.fire({
+        title: "Successfully Updated!",
+        icon: "success",
+        draggable: true
+      });
+    } catch (err) {
+      console.error("Failed to update the item", err)
     }
   }
-  const renderFloatingTable= (label:string,name:keyof Item,type="text",readOnly=false) => (
+  const renderFloatingTable = (label: string, name: keyof Item, type = "text", readOnly = false) => (
     <FloatingLabel
-            controlId="floatingInput"
-            label={label}
-            className="mb-3"
-          >
-            <Form.Control
-              type={type}
-              name={name}
-              value={item[name]?? ""}
-              onChange={handleOnChange}
-              readOnly={readOnly}
-            />
-          </FloatingLabel>
+      controlId="floatingInput"
+      label={label}
+      className="mb-3"
+    >
+      <Form.Control
+        type={type}
+        name={name}
+        value={item[name] ?? ""}
+        onChange={handleOnChange}
+        readOnly={readOnly}
+      />
+    </FloatingLabel>
   );
   return (
     <Modal show={show} onHide={handleClose}>
@@ -73,13 +78,21 @@ function EditItem({ show, selectedRow, handleClose, handleUpdate,updateItems  }:
       </Modal.Header>
       <Modal.Body>
         <form>
-          {renderFloatingTable ("Item Id", "id", "text", true)}
-          {renderFloatingTable ("Item Name", "name")}
-          {renderFloatingTable ("Item Description", "description")}
-          {renderFloatingTable ("Date", "date")}
-          {renderFloatingTable ("Time", "time")}
-          {renderFloatingTable ("Item status", "itemStatus")}
-          
+          {renderFloatingTable("Item Id", "id", "text", true)}
+          {renderFloatingTable("Item Name", "name")}
+          {renderFloatingTable("Item Description", "description")}
+          {renderFloatingTable("Date", "date")}
+          {renderFloatingTable("Time", "time")}
+          <FloatingLabel controlId="floating-itemRole" label="Item Role" className="mb-3">
+            <Form.Select name="itemStatus" value={item.itemStatus} onChange={handleOnChange}>
+
+              <option value="LOST">LOST</option>
+              <option value="FOUND">FOUND</option>
+              <option value="CLAIMED">CLAIMED</option>
+
+            </Form.Select>
+          </FloatingLabel>
+
         </form>
       </Modal.Body>
       <Modal.Footer>

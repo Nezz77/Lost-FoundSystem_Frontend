@@ -1,15 +1,16 @@
 import { useEffect, useState } from 'react';
 import { Button, Modal, Form, FloatingLabel } from 'react-bootstrap';
+import Swal from 'sweetalert2';
 
 
 interface User {
-        userid: string;
-        firstName: string;
-        lastName: string;
-        email: string;       // Assuming this is the username/email
-        password: string;
-        role: 'ADMIN'| 'STAFF'| 'USER' |"";
-    }
+  userid: string;
+  firstName: string;
+  lastName: string;
+  email: string;       // Assuming this is the username/email
+  password: string;
+  role: 'ADMIN' | 'STAFF' | 'USER' | "";
+}
 
 // interface User EditProps {
 //   show: boolean;
@@ -24,16 +25,16 @@ function AddUser({ show, handleClose, handleAdd, addUser }: any) {
   const [newUser, setNewUser] = useState<User>({
     userid: "",
     firstName: "",
-    lastName: "", 
-    email: "", 
+    lastName: "",
+    email: "",
     password: "",
     role: "",
   });
-  
+
 
 
   //add Userdata from form
-  const handleOnChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const handleOnChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement>) => {
     const { name, value } = e.target;
     setNewUser((prev) => ({ ...prev, [name]: value }))
   }
@@ -47,7 +48,11 @@ function AddUser({ show, handleClose, handleAdd, addUser }: any) {
       const newUserDetails = await addUser(newUser);
       handleAdd(newUserDetails)
       handleClose()
-      alert("Updated")
+      Swal.fire({
+        title: "Successfully Added!",
+        icon: "success",
+        draggable: true
+      });
     } catch (err) {
       console.error("Failed to update the User", err)
     }
@@ -77,9 +82,17 @@ function AddUser({ show, handleClose, handleAdd, addUser }: any) {
           {/* {renderFloatingTable("User Id", "id", "text", true)} */}
           {renderFloatingTable("First Name", "firstName")}
           {renderFloatingTable("Last Name", "lastName")}
-          {renderFloatingTable("Email","email")}
+          {renderFloatingTable("Email", "email")}
           {renderFloatingTable("User Password", "password")}
-          {renderFloatingTable("Role", "role")}
+          <FloatingLabel controlId="floating-itemRole" label="User Role" className="mb-3">
+            <Form.Select name="role" value={newUser.role} onChange={handleOnChange}>
+
+              <option value="ADMIN">ADMIN</option>
+              <option value="USER">USER</option>
+              <option value="STAFF">STAFF</option>
+
+            </Form.Select>
+          </FloatingLabel>
         </form>
       </Modal.Body>
       <Modal.Footer>

@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react';
 import { Button, Modal, Form, FloatingLabel } from 'react-bootstrap';
+import Swal from 'sweetalert2';
 
 
 interface Item {
@@ -8,7 +9,7 @@ interface Item {
   description: string;
   date: string;       // You may convert this to Date if you're storing real date objects
   time: string;       // Consider using a time format or Date object if needed
-  itemStatus: 'LOST'|'FOUND'|'CLAIMED'|""; // strict type for status values
+  itemStatus: 'LOST' | 'FOUND' | 'CLAIMED' | ""; // strict type for status values
 }
 
 // interface ItemEditProps {
@@ -19,7 +20,7 @@ interface Item {
 // }
 
 
-function AddItem({ show, handleClose, handleAdd,addItem}: any) {
+function AddItem({ show, handleClose, handleAdd, addItem }: any) {
   //state management
   const [newItem, setNewItem] = useState<Item>({
     id: "",
@@ -32,9 +33,9 @@ function AddItem({ show, handleClose, handleAdd,addItem}: any) {
 
 
   //add itemdata from form
-  const handleOnChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const {name,value} = e.target;
-    setNewItem((prev)=>({...prev,[name]:value}))
+  const handleOnChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement>) => {
+    const { name, value } = e.target;
+    setNewItem((prev) => ({ ...prev, [name]: value }))
   }
   //handle add item data 
   const handleOnSubmit = async () => {
@@ -42,14 +43,18 @@ function AddItem({ show, handleClose, handleAdd,addItem}: any) {
       const newItemDetails = await addItem(newItem);
       handleAdd(newItemDetails)
       handleClose()
-      alert("Updted")
-    }catch(err) {
-      console.error("Failed to update the item",err)
+      Swal.fire({
+        title: "Successfully Added!",
+        icon: "success",
+        draggable: true
+      });
+    } catch (err) {
+      console.error("Failed to update the item", err)
     }
   }
-  const renderFloatingTable= (label:string,name:keyof Item,type="text",readOnly=false) => (
+  const renderFloatingTable = (label: string, name: keyof Item, type = "text", readOnly = false) => (
     <FloatingLabel
-      controlId="floatingInput" 
+      controlId="floatingInput"
       label={label}
       className="mb-3"
     >
@@ -73,8 +78,16 @@ function AddItem({ show, handleClose, handleAdd,addItem}: any) {
           {renderFloatingTable("Item Description", "description")}
           {renderFloatingTable("Date", "date")}
           {renderFloatingTable("Time", "time")}
-          {renderFloatingTable("Item status", "itemStatus")}
-          
+          <FloatingLabel controlId="floating-itemRole" label="Item Role" className="mb-3">
+            <Form.Select name="itemStatus" value={newItem.itemStatus} onChange={handleOnChange}>
+
+              <option value="LOST">LOST</option>
+              <option value="FOUND">FOUND</option>
+              <option value="CLAIMED">CLAIMED</option>
+
+            </Form.Select>
+          </FloatingLabel>
+
         </form>
       </Modal.Body>
       <Modal.Footer>
@@ -82,7 +95,7 @@ function AddItem({ show, handleClose, handleAdd,addItem}: any) {
           Close
         </Button>
         <Button variant="primary" onClick={handleOnSubmit}>
-          Save 
+          Save
         </Button>
       </Modal.Footer>
     </Modal>

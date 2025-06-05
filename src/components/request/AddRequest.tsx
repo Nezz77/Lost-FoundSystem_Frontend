@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react';
 import { Button, Modal, Form, FloatingLabel } from 'react-bootstrap';
+import Swal from 'sweetalert2';
 
 
 interface Request {
@@ -8,8 +9,8 @@ interface Request {
   itemId: string;
   requestStatus: string;
   requesteddate: string;       // You may convert this to Date if you're storing real date objects
-  requestedtime: 'PENDING'|'APPROVED'|'REJECTED'|"";       // Consider using a time format or Date object if needed
-   // strict type for status values
+  requestedtime: 'PENDING' | 'APPROVED' | 'REJECTED' | "";       // Consider using a time format or Date object if needed
+  // strict type for status values
 }
 
 // interface RequestEditProps {
@@ -20,7 +21,7 @@ interface Request {
 // }
 
 
-function AddRequest({ show, handleClose, handleAdd,addRequest}: any) {
+function AddRequest({ show, handleClose, handleAdd, addRequest }: any) {
   //state management
   const [newRequest, setNewRequest] = useState<Request>({
     requestId: "",
@@ -29,14 +30,14 @@ function AddRequest({ show, handleClose, handleAdd,addRequest}: any) {
     requestStatus: "",
     requesteddate: "",
     requestedtime: "",
-    
+
   });
 
 
   //add requestdata from form
-  const handleOnChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const {name,value} = e.target;
-    setNewRequest((prev)=>({...prev,[name]:value}))
+  const handleOnChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement>) => {
+    const { name, value } = e.target;
+    setNewRequest((prev) => ({ ...prev, [name]: value }))
   }
   //handle add request data 
   const handleOnSubmit = async () => {
@@ -44,14 +45,18 @@ function AddRequest({ show, handleClose, handleAdd,addRequest}: any) {
       const newRequestDetails = await addRequest(newRequest);
       handleAdd(newRequestDetails)
       handleClose()
-      alert("Updted")
-    }catch(err) {
-      console.error("Failed to update the request",err)
+      Swal.fire({
+        title: "Successfully Added!",
+        icon: "success",
+        draggable: true
+      });
+    } catch (err) {
+      console.error("Failed to update the request", err)
     }
   }
-  const renderFloatingTable= (label:string,name:keyof Request,type="text",readOnly=false) => (
+  const renderFloatingTable = (label: string, name: keyof Request, type = "text", readOnly = false) => (
     <FloatingLabel
-      controlId="floatingInput" 
+      controlId="floatingInput"
       label={label}
       className="mb-3"
     >
@@ -74,9 +79,17 @@ function AddRequest({ show, handleClose, handleAdd,addRequest}: any) {
           {/* {renderFloatingTable("Request Id", "requestId")} */}
           {renderFloatingTable("User Id", "userId")}
           {renderFloatingTable("Item Id", "itemId")}
-          {renderFloatingTable("Request status", "requestStatus")}
           {/* {renderFloatingTable("Requested Date", "requesteddate")}
           {renderFloatingTable("Requested Time", "requestedtime")} */}
+          <FloatingLabel controlId="floating-itemRole" label="Request Role" className="mb-3">
+            <Form.Select name="requestStatus" value={newRequest.requestStatus} onChange={handleOnChange}>
+
+              <option value="PENDING">PENDING</option>
+              <option value="APPROVED">APPROVED</option>
+              <option value="REJECTED">REJECTED</option>
+
+            </Form.Select>
+          </FloatingLabel>
         </form>
       </Modal.Body>
       <Modal.Footer>
@@ -84,7 +97,7 @@ function AddRequest({ show, handleClose, handleAdd,addRequest}: any) {
           Close
         </Button>
         <Button variant="primary" onClick={handleOnSubmit}>
-          Save 
+          Save
         </Button>
       </Modal.Footer>
     </Modal>

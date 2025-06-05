@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react';
 import { Button, Modal, Form, FloatingLabel } from 'react-bootstrap';
+import Swal from 'sweetalert2';
 
 
 interface Request {
@@ -16,11 +17,11 @@ interface RequestEditProps {
   selectedRow: Request | null;
   handleClose: () => void;
   handleUpdate: (updatedRequest: Request) => void;
-  updateRequests:(request: Request) => Promise<Request>; 
+  updateRequests: (request: Request) => Promise<Request>;
 }
 
 
-function EditRequest({ show, selectedRow, handleClose, handleUpdate,updateRequests  }: RequestEditProps) {
+function EditRequest({ show, selectedRow, handleClose, handleUpdate, updateRequests }: RequestEditProps) {
   //state management
   const [request, setRequest] = useState<Request>({
     requestId: "",
@@ -37,7 +38,7 @@ function EditRequest({ show, selectedRow, handleClose, handleUpdate,updateReques
   }, [selectedRow])
 
   //add requestdata from form
-  const handleOnChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const handleOnChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement>) => {
     setRequest({ ...request, [e.target.name]: e.target.value })
   }
   //handle update data 
@@ -46,25 +47,29 @@ function EditRequest({ show, selectedRow, handleClose, handleUpdate,updateReques
       const updatedRequest = await updateRequests(request);
       handleUpdate(request)
       handleClose()
-      alert("Updted")
-    }catch(err) {
-      console.error("Failed to update the request",err)
+      Swal.fire({
+        title: "Successfully Updated!",
+        icon: "success",
+        draggable: true
+      });
+    } catch (err) {
+      console.error("Failed to update the request", err)
     }
   }
-  const renderFloatingTable= (label:string,name:keyof Request,type="text",readOnly=false) => (
+  const renderFloatingTable = (label: string, name: keyof Request, type = "text", readOnly = false) => (
     <FloatingLabel
-            controlId="floatingInput"
-            label={label}
-            className="mb-3"
-          >
-            <Form.Control
-              type={type}
-              name={name}
-              value={request[name]}
-              onChange={handleOnChange}
-              readOnly={readOnly}
-            />
-          </FloatingLabel>
+      controlId="floatingInput"
+      label={label}
+      className="mb-3"
+    >
+      <Form.Control
+        type={type}
+        name={name}
+        value={request[name]}
+        onChange={handleOnChange}
+        readOnly={readOnly}
+      />
+    </FloatingLabel>
   );
   return (
     <Modal show={show} onHide={handleClose}>
@@ -73,13 +78,21 @@ function EditRequest({ show, selectedRow, handleClose, handleUpdate,updateReques
       </Modal.Header>
       <Modal.Body>
         <form>
-          {renderFloatingTable ("Request Id", "requestId", "text", true)}
-          {renderFloatingTable ("User Id", "userId", "text", true)}
-          {renderFloatingTable ("Item Id", "itemId", "text", true)}
-          {renderFloatingTable ("Requested Date", "requesteddate", "text", true)}
-          {renderFloatingTable ("Requested Time", "requestedtime", "text", true)}
-          {renderFloatingTable ("Request status", "requestStatus")}
-          
+          {renderFloatingTable("Request Id", "requestId", "text", true)}
+          {renderFloatingTable("User Id", "userId", "text", true)}
+          {renderFloatingTable("Item Id", "itemId", "text", true)}
+          {renderFloatingTable("Requested Date", "requesteddate", "text", true)}
+          {renderFloatingTable("Requested Time", "requestedtime", "text", true)}
+          <FloatingLabel controlId="floating-itemRole" label="Request Role" className="mb-3">
+            <Form.Select name="requestStatus" value={request.requestStatus} onChange={handleOnChange}>
+
+              <option value="PENDING">PENDING</option>
+              <option value="APPROVED">APPROVED</option>
+              <option value="REJECTED">REJECTED</option>
+
+            </Form.Select>
+          </FloatingLabel>
+
         </form>
       </Modal.Body>
       <Modal.Footer>

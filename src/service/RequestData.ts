@@ -1,5 +1,4 @@
 import axios from "axios"
-import { error } from "console";
 
 const baseURL = "http://localhost:8085/lostfound/api/v1/requests"
 

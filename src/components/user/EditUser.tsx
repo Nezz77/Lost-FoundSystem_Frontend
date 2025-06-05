@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react';
 import { Button, Modal, Form, FloatingLabel } from 'react-bootstrap';
+import Swal from 'sweetalert2';
 
 
 interface User {
@@ -37,7 +38,7 @@ function EditUser({ show, selectedRow, handleClose, handleUpdate, updateUsers }:
   }, [selectedRow])
 
   //add Userdata from form
-  const handleOnChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const handleOnChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement>) => {
     setUser({ ...user, [e.target.name]: e.target.value })
   }
   //handle update data 
@@ -46,7 +47,11 @@ function EditUser({ show, selectedRow, handleClose, handleUpdate, updateUsers }:
       const updatedUser = await updateUsers(user);
       handleUpdate(user)
       handleClose()
-      alert("Updted")
+      Swal.fire({
+        title: "Successfully Added!",
+        icon: "success",
+        draggable: true
+      });
     } catch (err) {
       console.error("Failed to update the User", err)
     }
@@ -78,7 +83,16 @@ function EditUser({ show, selectedRow, handleClose, handleUpdate, updateUsers }:
           {renderFloatingTable("Last Name", "lastName")}
           {renderFloatingTable("UserName/Email", "email", "email", true)}
           {renderFloatingTable("User password", "password")}
-          {renderFloatingTable("Role", "role")}
+          <FloatingLabel controlId="floating-itemRole" label="User Role" className="mb-3">
+            <Form.Select name="role" value={user.role} onChange={handleOnChange}>
+
+              <option value="ADMIN">ADMIN</option>
+              <option value="USER">USER</option>
+              <option value="STAFF">STAFF</option>
+
+            </Form.Select>
+          </FloatingLabel>
+
         </form>
       </Modal.Body>
       <Modal.Footer>

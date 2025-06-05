@@ -2,7 +2,8 @@ import { useState } from 'react';
 import Button from 'react-bootstrap/Button';
 import Form from 'react-bootstrap/Form';
 import { SignUpReq } from '../../service/Auth';
-import { useAuth } from './AuthProvider';   
+import { useAuth } from './AuthProvider';
+import { useNavigate, useLocation } from 'react-router';
 
 export const SignUp = () => {
     interface SignUp {
@@ -13,7 +14,7 @@ export const SignUp = () => {
         role: string;
     }
     const { login } = useAuth(); // Get the login function from AuthProvider
-
+    const navigate = useNavigate();
     const [user, setUser] = useState<SignUp>({
         firstName: '',
         lastName: '',
@@ -37,20 +38,24 @@ export const SignUp = () => {
         const token = await SignUpReq(user);
         console.log("Token", token);
         console.log("User Data", user);
-
+        login(token)
         setUser({
             firstName: "",
             lastName: "",
             email: "",
             password: "",
             role: ""
-        });
-         login(token) // Call the login function with the token
+        })
+        navigate("/user")
     };
+
+    const location = useLocation();
+    const routename = location.pathname.split("/").filter(Boolean).pop() || "HOME";
+    const formattedTitle = routename.charAt(0).toUpperCase() + routename.slice(1).replace(/-/g, ' ');
 
     return (
         <>
-            <h1>Sign up</h1>
+            <h1 className="text-center">{formattedTitle}</h1>
             <Form className='d-flex flex-column align-items-center' onSubmit={handleonSubmit}>
                 <div className='w-50 mx-auto mt-5'>
 

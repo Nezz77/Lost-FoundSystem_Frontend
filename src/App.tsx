@@ -8,6 +8,7 @@ import { SignIn } from './components/auth/SignIn';
 import { SignUp } from './components/auth/SignUp';
 import { AuthProvider } from './components/auth/AuthProvider';
 import NavB from './components/NavB';
+import Home from './components/home/home';
 
 function App() {
   return (
@@ -16,7 +17,7 @@ function App() {
       <AuthProvider>
         <NavB />
         <Routes>
-          <Route path="/" element={<ItemConsole />} />
+          <Route path="/" element={<Home />} />
           <Route path="/signin" element={<SignIn/>} />
           <Route path="/signup" element={<SignUp />} />
           <Route path="/item" element={<ItemConsole />} />
